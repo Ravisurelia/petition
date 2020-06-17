@@ -16,5 +16,5 @@ app.use(
 app.use(express.static(__dirname + "/public"));
 
 app.listen(8080, () => {
-  console.log("server listening!");
+  console.log("my express server running!!!!");
 });
