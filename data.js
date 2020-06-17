@@ -15,6 +15,10 @@ exports.signed = () => {
   return db.query("SELECT firstname, lastname FROM petition");
 };
 
+exports.signedId = () => {
+  return db.query(`SELECT signature FROM signed WHERE id = $1`, [id]);
+};
+
 /* db.query("SELECT * FROM cities")
   .then((results) => {
     console.log(results);

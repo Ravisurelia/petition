@@ -1,5 +1,22 @@
-<div class="conatiner">
-    <h1>hi thi is my get petition</h1>
-
-</div>
+<main>
+    <div class="conatiner">
+        <h1 class="theme">Sign this petition to legally laugh like a Denver (Money heist)! </h1>
+        <h2 class="info">Please watch the video before you sign up!! It will make you laugh.</h2>
+        <div class="vid">
+            <iframe width="560" height="300" src="https://www.youtube.com/embed/MASPbl210_c" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>Denver's
+                laugh</iframe>
+        </div>
+        <form method="POST">
+            <input type="text" class="userinput" name="firstname" placeholder="First Name">
+            <input type="text" class="userinput" name="lastname" placeholder="Last Name">
+            <input id="sign" type="hidden" name='signature'>
+            <canvas height="80px" width="600px"></canvas>
+            <button>Submit</button>
+        </form>
+        {{#if error}}
+        <h2 class="error">All fields are mandatory.</h2>
+        {{/if}}
+    </div>
+</main>
 <script src="/public/mycanvas.js"></script>
