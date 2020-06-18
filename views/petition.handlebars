@@ -1,4 +1,7 @@
 <main>
+    {{#if error}}
+    <h2 class="error">All fields are mandatory.</h2>
+    {{/if}}
 
     <div class="conatiner">
         <h1 class="theme">Sign this petition to legally laugh like a Denver (Money heist)! </h1>
@@ -16,9 +19,7 @@
             <input type="hidden" name='_csrf' value="{{csrfToken}}">
             <button>Submit</button>
         </form>
-        {{#if error}}
-        <h2 class="error">All fields are mandatory.</h2>
-        {{/if}}
+
 
     </div>
 

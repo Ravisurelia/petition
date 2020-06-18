@@ -7,7 +7,7 @@ const hb = require("express-handlebars");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
-const { add, signed, signedId } = require("./data");
+const { addUser, signed, signedId } = require("./data");
 const { hash, compare } = require("./bc");
 //middleware
 app.use(
@@ -66,7 +66,7 @@ app.get("/petition", (req, res) => {
 
 //route for the front page - POST req for the petition page
 app.post("/petition", (req, res) => {
-  add(req.body.firstname, req.body.lastname, req.body.signature)
+  addUser(req.body.firstname, req.body.lastname, req.body.signature)
     .then((results) => {
       console.log("my petition POST results: ", results);
 
@@ -92,8 +92,8 @@ app.get("/thankyou", (req, res) => {
     signedId(req.session.userID)
       .then((results) => {
         console.log("this is my thankyou results: ", results);
-        let firstName = results.rows[0].firstname;
-        let lastName = results.rows[0].lastname;
+        let firstName = results.rows[0].first;
+        let lastName = results.rows[0].last;
         let signature = results.rows[0].signature;
         res.render("thankyou", {
           firstName,
@@ -118,9 +118,7 @@ app.get("/signed", (req, res) => {
     signed()
       .then((results) => {
         for (let i = 0; i < results.rows.length; i++) {
-          signedArray.push(
-            `${results.rows[i].firstname} ${results.rows[i].lastname}`
-          );
+          signedArray.push(`${results.rows[i].first} ${results.rows[i].last}`);
         }
         console.log("this is my signed array: ", signedArray);
         res.render("signed", {

@@ -21,10 +21,9 @@
     if (!sketch) {
       return;
     } else {
-      ctx.moveTo(x, y);
       let x = event.offsetX;
       let y = event.offsetY;
-      ctx.moveTo(x, y);
+      //ctx.moveTo(x, y);
       ctx.lineTo(x, y);
       ctx.stroke();
     }

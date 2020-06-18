@@ -96,8 +96,11 @@ h3 {
 }
 
 .details {
-  display: inline;
-  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
 }
 
 h4 {
@@ -105,4 +108,15 @@ h4 {
   font-family: "Courier New", Courier, monospace;
   font-weight: 500;
   font-style: italic;
+}
+
+.signbox {
+  width: 300px;
+}
+
+.signed-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
