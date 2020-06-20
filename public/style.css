@@ -120,3 +120,22 @@ h4 {
   justify-content: center;
   align-items: center;
 }
+
+.registration {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.smallintro {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 700;
+  font-size: 25px;
+  text-align: center;
+}
+
+.loginpage {
+  text-align: center;
+  margin-top: 20px;
+}

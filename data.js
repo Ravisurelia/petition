@@ -4,20 +4,44 @@ const { dbUser, dbPass } = require("./secrets.json");
 //console.log(dbUser, dbPass);
 const db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/petition`);
 
-exports.addUser = (firstname, lastname, signature) => {
+//user-table----------------------------------------------
+exports.addUser = (firstname, lastname, email, password) => {
+  //inserting user data first, last, email, password
   return db.query(
-    `INSERT INTO signatures (first, last, signature) VALUES ($1, $2, $3) returning id`,
-    [firstname, lastname, signature]
+    `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING id`,
+    [firstname, lastname, email, password]
   );
 };
 
-exports.signed = () => {
-  return db.query("SELECT first, last FROM signatures");
+//user-table----------------------------------------------
+exports.gettingPassword = (email) => {
+  //password and id to email
+  return db.query("SELECT password FROM users WHERE email = $1", [email]);
 };
 
-exports.signedId = (id) => {
+//signature-table----------------------------------------------
+exports.signedUserId = (userId) => {
+  //selecting userid
+  return db.query(`SELECT signature FROM signatures WHERE user_id = $1`, [
+    userId,
+  ]);
+};
+
+//signature-table----------------------------------------------
+exports.signed = (signature, userId) => {
+  //inserting signature here
   return db.query(
-    `SELECT first, last, signature FROM signatures WHERE id = $1`,
+    `INSERT INTO signatures (signature, user_id) VALUES($1, $2) RETURNING id`,
+    [signature, userId]
+  );
+};
+
+//signature-table----------------------------------------------
+exports.signedId = (id) => {
+  //selecting id here
+  return db.query(
+    //add first and last if you want to show first and last name with the signature
+    `SELECT signature FROM signatures WHERE id = $1`,
     [id]
   );
 };

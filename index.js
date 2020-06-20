@@ -7,9 +7,16 @@ const hb = require("express-handlebars");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
-const { addUser, signed, signedId } = require("./data");
-const { hash, compare } = require("./bc");
-//middleware
+const {
+  addUser,
+  gettingPassword,
+  signedUserId,
+  signed,
+  signedId,
+} = require("./data");
+const { hash, compare } = require("./bc.js");
+
+//middleware--------------------------------------------------------------------
 app.use(
   cookieSession({
     secret: `Ì am always angry.`,
@@ -40,56 +47,165 @@ app.use((req, res, next) => {
   next();
 });
 
-//routes
-//route for the front page - GET req
+//routes----------------------------------------------------------------------------
+//route for the front page - GET req-----------------
 app.get("/", (req, res) => {
   console.log("GET request to the root route");
-  res.redirect("/petition");
+  res.redirect("/register");
+});
+
+//route for the register page - GET req---------------------
+app.get("/register", (req, res) => {
+  if (req.session.userId) {
+    res.redirect("petition");
+  } else {
+    res.render("register", {
+      layout: "main",
+    });
+  }
+});
+
+//route for the front page - POST req for the register page-----------
+app.post("/register", (req, res) => {
+  console.log("this is my req.body: ", req.body);
+  console.log("this is my req.body.password: ", req.body.password);
+  //here we are getting the deetails of the users and once they are registered, it will lead them to login page
+  hash(req.body.password)
+    .then((hashedpassword) => {
+      console.log("my hashedpassword: ", hashedpassword);
+      addUser(
+        req.body.firstname,
+        req.body.lastname,
+        req.body.email,
+        hashedpassword
+      )
+        .then((results) => {
+          console.log("my register POST results: ", results);
+          console.log("req.session: ", req.session);
+          req.session.userId = results.rows[0].id;
+          req.session.permission = true;
+          console.log("req.session after the value set: ", req.session);
+          res.redirect("petition");
+        })
+        .catch((err) => {
+          console.log("my post register error: ", err);
+          res.render("register", {
+            error: true,
+          });
+        });
+    })
+    .catch((err) => {
+      console.log("my post register error 2: ", err);
+      res.sendStatus(500);
+    });
+
   //res.end();
 });
 
-//route for the petition page - GET req
-app.get("/petition", (req, res) => {
-  res.render("petition", {
-    layout: "main",
-  });
-  /* const { add, signed } = req.session;
-
-  if (add && signed) {
-    res.render("petition", {
+//route for the login page - GET req-----------------------
+app.get("/login", (req, res) => {
+  if (req.session.userId) {
+    res.redirect("petition");
+  } else {
+    res.render("login", {
       layout: "main",
     });
-  } else {
-    res.send("<h1>ACCESS DENIED!!!!!!</h1>");
-  } */
+  }
 });
 
-//route for the front page - POST req for the petition page
-app.post("/petition", (req, res) => {
-  addUser(req.body.firstname, req.body.lastname, req.body.signature)
+//route for the login page - POST req------------------------------
+app.post("/login", (req, res) => {
+  //here we are getting the password from the register page and matching it here to see if it is the same
+  gettingPassword(req.body.email)
     .then((results) => {
-      console.log("my petition POST results: ", results);
+      console.log("my login results: ", results);
+      compare(req.body.email, results.rows[0].password)
+        .then((equal) => {
+          if (equal) {
+            req.session.userId = results.rows[0].id;
 
-      console.log("req.session: ", req.session);
-      req.session.userID = results.rows[0].id;
-      req.session.permission = true;
-      console.log("req.session after the value set: ", req.session);
-
-      res.redirect("/thankyou");
+            signedUserId(results.rows[0].id)
+              .then((results) => {
+                if (results.rowCount == 0) {
+                  res.redirect("petition");
+                } else {
+                  res.redirect("thankyou");
+                }
+              })
+              .catch((err) => {
+                console.log("my post register signedUserId error: ", err);
+                res.redirect("/petition");
+              });
+          } else {
+            console.log("it is not equal: ", equal);
+            res.render("login", {
+              error: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("my post login error: ", err);
+          res.render("login", {
+            error: true,
+          });
+        });
     })
     .catch((err) => {
-      console.log("my post petition error: ", err);
+      console.log("my post login error 2: ", err);
+      res.render("login", {
+        error: true,
+      });
+    });
+
+  //res.end();
+});
+
+//route for the petition page - GET req------------------------------
+app.get("/petition", (req, res) => {
+  //here we are taking the user to sign the petition with the their signature after password and ids are matched
+  if (req.session.userId) {
+    signedUserId(req.session.userId)
+      .then((results) => {
+        if (results.rowCount == 0) {
+          res.render("petition", {
+            layout: "main",
+          });
+        } else {
+          res.redirect("thankyou");
+        }
+      })
+      .catch((err) => {
+        console.log("my get signedUserId petition error: ", err);
+      });
+  } else {
+    res.redirect("register");
+  }
+});
+
+//route for the petition page - POST req------------------------------
+app.post("/petition", (req, res) => {
+  console.log("this is my signature thing: ", req.body);
+
+  signed(req.body.signature, req.session.userId)
+    .then((results) => {
+      console.log("this is my post petition results: ", results);
+      console.log((" results.rows[0].id: ", results.rows[0].id));
+      results.rows[0].id = req.session.signatureId;
+      console.log("req.session.signatureId: ", req.session.signatureId);
+      res.redirect("thankyou");
+    })
+    .catch((err) => {
+      console.log("my get post petition catch error: ", err);
       res.render("petition", {
         error: true,
       });
     });
-  //res.end();
 });
 
-//route for the thanks page - GET req
+//route for the thanks page - GET req------------------------------
 app.get("/thankyou", (req, res) => {
-  if (req.session.userID) {
-    signedId(req.session.userID)
+  if (req.session.userId) {
+    signedUserId(req.session.userId)
       .then((results) => {
         console.log("this is my thankyou results: ", results);
         let firstName = results.rows[0].first;
@@ -105,17 +221,17 @@ app.get("/thankyou", (req, res) => {
         console.log("my /thankyou error: ", err);
       });
   } else {
-    res.redirect("/petition");
+    res.redirect("register");
   }
 });
 
-//route for the signed page - GET req-to see who has signed the petition
+//route for the signed page - GET req-to see who has signed the petition----------------------
 app.get("/signed", (req, res) => {
-  if (!req.session.userID) {
+  if (!req.session.userId) {
     res.redirect("/petition");
   } else {
     let signedArray = [];
-    signed()
+    signedId()
       .then((results) => {
         for (let i = 0; i < results.rows.length; i++) {
           signedArray.push(`${results.rows[i].first} ${results.rows[i].last}`);
@@ -135,7 +251,7 @@ app.listen(8080, () => {
   console.log("my express server running!!!!");
 });
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
-///////////////////petition part-3
+///////////////////petition part-3 reference learned in the class
 /* 
 app.post("/register", (req, res) => {
   //you will get all sorts of info first last email and desired password in clear text all this infor will be in req.body

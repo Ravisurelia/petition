@@ -6,9 +6,9 @@ genSalt = promisify(genSalt);
 hash = promisify(hash);
 compare = promisify(compare);
 
-module.exports.hash = (plainTextPw) =>
-  genSalt().then((salt) => hash(plainTextPw, salt));
-module.exports.compare = compare;
+exports.hash = (password) => genSalt().then((salt) => hash(password, salt));
+
+exports.compare = compare;
 
 ////////DEMO OF BCRYPT FUNCTIONS////////////////
 //this is the same stuff we did in line 9 and 10;

@@ -1,0 +1,24 @@
+<div class="registration">
+    {{#if error}}
+    <h2 class="loginerror">Something went wrong!! Please check if you have filled all the required areas!.</h2>
+    {{/if}}
+    <div class="logincontainer">
+        <div class="smallintro">
+            <p>Sign this petition to legally laugh like a Denver (Money heist)! </p>
+            <p>Your support is all we have!</p>
+            <p>Please insert your details here!</p>
+        </div>
+        <form method="POST">
+            <input type="text" class="userinput" name="firstname" placeholder="First Name">
+            <input type="text" class="userinput" name="lastname" placeholder="Last Name">
+            <input type="text" class="email" name="email" placeholder="email">
+            <input type="password" class="password" name="password" placeholder="password">
+            <input type="hidden" name='_csrf' value="{{csrfToken}}">
+            <button>Submit</button>
+            <a class="loginpage" href="./login">If you have already register. Login Here!</a>
+        </form>
+
+    </div>
+
+
+</div>
