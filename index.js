@@ -115,17 +115,21 @@ app.get("/login", (req, res) => {
 
 //route for the login page - POST req------------------------------
 app.post("/login", (req, res) => {
+  console.log("this is my req.body in post login: ", req.body);
+
   //here we are getting the password from the register page and matching it here to see if it is the same
   gettingPassword(req.body.email)
     .then((results) => {
       console.log("my login results: ", results);
+      console.log("req.body.email in login : ", req.body.email);
+      console.log("req.body.password in login: ", req.body.password);
       compare(req.body.email, results.rows[0].password)
-        .then((equal) => {
-          if (equal) {
+        .then((match) => {
+          if (match) {
             req.session.userId = results.rows[0].id;
-
-            signedUserId(results.rows[0].id)
+            signedUserId(req.session.userId)
               .then((results) => {
+                console.log("my login results 2: ", results);
                 if (results.rowCount == 0) {
                   res.redirect("petition");
                 } else {
@@ -234,7 +238,9 @@ app.get("/signed", (req, res) => {
     signedId()
       .then((results) => {
         for (let i = 0; i < results.rows.length; i++) {
-          signedArray.push(`${results.rows[i].first} ${results.rows[i].last}`);
+          signedArray.push(
+            `${results.rows[i].firstname} ${results.rows[i].lastname}`
+          );
         }
         console.log("this is my signed array: ", signedArray);
         res.render("signed", {
