@@ -42,7 +42,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.use((req, res, next) => {
   console.log("--------------");
-  console.log("GET is rounted  / with this");
+  console.log("GET is routed  / with this");
   console.log("--------------");
   next();
 });
@@ -69,7 +69,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   console.log("this is my req.body: ", req.body);
   console.log("this is my req.body.password: ", req.body.password);
-  //here we are getting the deetails of the users and once they are registered, it will lead them to login page
+  //here we are getting the details of the users and once they are registered, it will lead them to login page
   hash(req.body.password)
     .then((hashedpassword) => {
       console.log("my hashedpassword: ", hashedpassword);
@@ -253,22 +253,22 @@ app.get("/signed", (req, res) => {
   }
 });
 
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("my express server running!!!!");
 });
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 ///////////////////petition part-3 reference learned in the class
 /* 
 app.post("/register", (req, res) => {
-  //you will get all sorts of info first last email and desired password in clear text all this infor will be in req.body
+  //you will get all sorts of info first last email and desired password in clear text all this info will be in req.body
   //you will want to call hash, pass it to the user's pw (i.e req.boy.password) and salt&hash it before you store the user's infor in the the database
-  //in class we are hardcoding the users pw input and do not do this when you write an actual code
+  //in class we are hard coding the users pw input and do not do this when you write an actual code
 
-  //if something goes wrong in our insert or user information render resgister with an error message
+  //if something goes wrong in our insert or user information render register with an error message
   //and if everything goes write then redirect them to the petition
   hash("userInput")
     .then((hashedPw) => {
-      console.log("hashed unserInput/password: ", hashedPw);
+      console.log("hashed userInput/password: ", hashedPw);
 
       //this is where we will want to make an insert into our database with all this information
       res.sendStatus(200);
@@ -281,10 +281,10 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  //this is where we want to use compares as we just compre if the password that user has typed is same what we have in our database
-  //user info will be in rq.body we will recieve an email and password
-  //with the help of the email adress we will identify the hash to check agaist the password provided.
-  //in real we will reccive the info from the database
+  //this is where we want to use compares as we just compare if the password that user has typed is same what we have in our database
+  //user info will be in rq.body we will receive an email and password
+  //with the help of the email address we will identify the hash to check against the password provided.
+  //in real we will receive the info from the database
   const hashedUserPw =
     "$2a$10$szKdFm4J1VOLDuMtWjXYaezXbNaq5EkjI0GewKp/S4sMATgPH3M46"; //this is just an example
   //now we will compare it with what user has typed
@@ -293,7 +293,7 @@ app.post("/login", (req, res) => {
       console.log("match: ", match);
       console.log("password correct?", match);
       //if  the match is true you want to store user is in the cookie
-      //if the password dont match render login with the error message
+      //if the password don't match render login with the error message
       //of the compare is true
       res.sendStatus(200);
     })

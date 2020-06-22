@@ -1,0 +1,27 @@
+<div class="profiles">
+    <nav class="navigation">
+        <a class="menu" href="./petition">Petition</a>
+        <a class="menu" href="./signed">Signed</a>
+    </nav>
+
+    <div class="smallintro">
+        <p>Sign this petition to legally laugh like a Denver (Money heist)! </p>
+        <p>Please insert some more details here!</p>
+    </div>
+
+    {{#if error}}
+    <h2 class="loginerror">Something went wrong!! Please check if you have not missed anything!.</h2>
+    {{/if}}
+    <div class="logincontainer">
+
+        <form method="POST">
+            <input type="number" class="age" name="age" placeholder="age">
+            <input type="text" class="city" name="city" placeholder="city">
+            <input type="text" class="profession" name="profession" placeholder="profession">
+            <input type="text" class="userUrl" name="userUrl" placeholder="Homepage url">
+            <input type="hidden" name='_csrf' value="{{csrfToken}}">
+            <button>Submit</button>
+        </form>
+
+    </div>
+</div>

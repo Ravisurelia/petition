@@ -1,8 +1,13 @@
 const spicedPg = require("spiced-pg");
 
-const { dbUser, dbPass } = require("./secrets.json");
-//console.log(dbUser, dbPass);
-const db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/petition`);
+let db;
+if (process.env.DATABASE_URL) {
+  db = spicedPg(process.env.DATABASE_URL);
+} else {
+  const { dbUser, dbPass } = require("./secrets.json");
+  //console.log(dbUser, dbPass);
+  db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/petition`);
+}
 
 //user-table----------------------------------------------
 exports.addUser = (firstname, lastname, email, password) => {
@@ -51,3 +56,21 @@ exports.signedId = (id) => {
     console.log(results);
   })
   .catch((e) => console.log(e)); */
+
+//-----------------------------
+//part-5
+
+/* INSERT INTO user_profiles (user_id, first)
+VALUES (1, "funkyChicken");
+
+UPDATE user_profiles
+SET first = "discoDuck"
+WHERE user_id = 1;
+
+INSERT INTO user_profiles (user_id , first)
+VALUES ($1, $2)
+ON CONFLICT (user_id)
+DO UPDATE user_profiles
+SET first = $2;
+
+DELETE FROM user_profiles WHERE user_id = $1; */
