@@ -10,9 +10,12 @@ app.set("view engine", "handlebars");
 const {
   addUser,
   gettingPassword,
+  userProfileData,
   signedUserId,
   signed,
   signedId,
+  getAllSigners,
+  allSignersByCity,
 } = require("./data");
 const { hash, compare } = require("./bc.js");
 
@@ -85,7 +88,7 @@ app.post("/register", (req, res) => {
           req.session.userId = results.rows[0].id;
           req.session.permission = true;
           console.log("req.session after the value set: ", req.session);
-          res.redirect("petition");
+          res.redirect("profiles");
         })
         .catch((err) => {
           console.log("my post register error: ", err);
@@ -162,6 +165,30 @@ app.post("/login", (req, res) => {
     });
 
   //res.end();
+});
+
+//route for the profile page - GET req------------------------------
+app.get("/profile", (req, res) => {
+  res.render("profile");
+});
+
+//route for the profile page - POST req------------------------------
+app.post("/profiles", (req, res) => {
+  if (req.session.userId) {
+    userProfileData(
+      req.body.age,
+      req.body.city,
+      req.body.url,
+      req.session.userId
+    )
+      .then((results) => {
+        console.log("This is my post profiles results: ", results);
+        res.redirect("petition");
+      })
+      .catch((err) => {
+        console.log("This is my post catch err: ", err);
+      });
+  }
 });
 
 //route for the petition page - GET req------------------------------

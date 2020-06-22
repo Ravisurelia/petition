@@ -24,6 +24,14 @@ exports.gettingPassword = (email) => {
   return db.query("SELECT password FROM users WHERE email = $1", [email]);
 };
 
+//INSERTING DATA INTO user_profiles----------------------------------------------
+exports.userProfileData = (age, city, url, id) => {
+  return db.query(
+    `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1,$2,$3,$4) RETURNING *`,
+    [age, city, url, id]
+  );
+};
+
 //signature-table----------------------------------------------
 exports.signedUserId = (userId) => {
   //selecting userid
@@ -48,6 +56,25 @@ exports.signedId = (id) => {
     //add first and last if you want to show first and last name with the signature
     `SELECT signature FROM signatures WHERE id = $1`,
     [id]
+  );
+};
+
+//JOINING for signers information----------------------------------------------
+exports.getAllSigners = () => {
+  return db.query(
+    `SELECT signatures.signature, signatures.user_id AS signature, users_firstname, users_lastname AS name, user_profiles.city, user_profiles.url AS url 
+    FROM signatures 
+    JOIN users ON signatures.user_id = users.id 
+    JOIN user_profiles 
+    ON users.id = user_profiles.user_id`
+  );
+};
+
+//GETTING signers by the name of the city----------------------------------------------
+exports.allSignersByCity = (city) => {
+  return db.query(
+    `SELECT user_profiles.city, users.firstname, users.lastname FROM user_profiles JOIN users ON user_profiles.user_id = users.id WHERE LOWER(city) = LOWER($1)`,
+    [city]
   );
 };
 
