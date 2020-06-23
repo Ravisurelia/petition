@@ -169,7 +169,9 @@ app.post("/login", (req, res) => {
 
 //route for the profile page - GET req------------------------------
 app.get("/profile", (req, res) => {
-  res.render("profile");
+  res.render("profile", {
+    layout: "main",
+  });
 });
 
 //route for the profile page - POST req------------------------------
@@ -239,8 +241,8 @@ app.get("/thankyou", (req, res) => {
     signedUserId(req.session.userId)
       .then((results) => {
         console.log("this is my thankyou results: ", results);
-        let firstName = results.rows[0].first;
-        let lastName = results.rows[0].last;
+        /*  let firstName = results.rows[0].first;
+        let lastName = results.rows[0].last; */
         let signature = results.rows[0].signature;
         res.render("thankyou", {
           firstName,
@@ -258,11 +260,28 @@ app.get("/thankyou", (req, res) => {
 
 //route for the signed page - GET req-to see who has signed the petition----------------------
 app.get("/signed", (req, res) => {
-  if (!req.session.userId) {
-    res.redirect("/petition");
+  if (req.session.userId) {
+    signedUserId(req.session.userId).then((results) => {
+      if (results.rowCount == 0) {
+        res.redirect("/petition");
+      } else {
+        getAllSigners()
+          .then((results) => {
+            console.log("This is my all signers check: ", results.rows);
+            let people = results.rows;
+            res.render("signed", {
+              people,
+            });
+          })
+          .catch((err) => {
+            console.log("my /signed error in getting all signers: ", err);
+          });
+      }
+    });
+    /*  res.redirect("/register");
   } else {
     let signedArray = [];
-    signedId()
+    signedId(req.session.userId)
       .then((results) => {
         for (let i = 0; i < results.rows.length; i++) {
           signedArray.push(
@@ -273,16 +292,37 @@ app.get("/signed", (req, res) => {
         res.render("signed", {
           signedArray,
         });
+
       })
       .catch((err) => {
         console.log("my /signed error: ", err);
-      });
+      }); */
+  } else {
+    res.redirect("/petition");
   }
+});
+
+//route for the signersbycity page - GET req-to see who has signed the petition has the same city----------------------
+app.get("/city", (req, res) => {
+  console.log("This is my req.params.city: ", req.params.city);
+
+  allSignersByCity(req.params.city)
+    .then((results) => {
+      console.log("This is my all signers check: ", results.rows);
+      let people = results.rows;
+      res.render("city", {
+        people,
+      });
+    })
+    .catch((err) => {
+      console.log("my /signed error in getting all signers with city : ", err);
+    });
 });
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("my express server running!!!!");
 });
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 ///////////////////petition part-3 reference learned in the class
 /* 
