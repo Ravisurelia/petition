@@ -1,6 +1,6 @@
 <div class="signed-container">
     <h2 class="list">WE ARE ONE!</h2>
-    {{#signedArray}}
-    <li><a href="{{url}}">{{firstname}} {{lastname}} </a> {{age}} <a href="/signed/{{city}}"> {{city}} </a></li>
-    {{/signedArray}}
+    {{#people}}
+    <li><a href="{{url}}">{{first}} {{last}}, </a> {{age}} <a href="/signed/{{city}}"> {{city}} </a></li>
+    {{/people}}
 </div>

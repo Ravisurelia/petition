@@ -62,7 +62,7 @@ exports.signedId = (id) => {
 //JOINING for signers information----------------------------------------------
 exports.getAllSigners = () => {
   return db.query(
-    `SELECT firstname, lastname, age, city, url 
+    `SELECT first, last, age, city, url 
     FROM users 
     JOIN signatures 
     ON users.id = signatures.user_id
@@ -74,7 +74,7 @@ exports.getAllSigners = () => {
 //GETTING signers by the name of the city----------------------------------------------
 exports.allSignersByCity = (city) => {
   return db.query(
-    `SELECT firstname, lastname, age, url 
+    `SELECT first, last, age, url 
     FROM users 
     JOIN signatures 
     ON users.id = signatures.user_id 

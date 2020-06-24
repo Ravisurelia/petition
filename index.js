@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+const app = (exports.app = express());
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
 
@@ -168,8 +168,8 @@ app.post("/login", (req, res) => {
 });
 
 //route for the profile page - GET req------------------------------
-app.get("/profile", (req, res) => {
-  res.render("profile", {
+app.get("/profiles", (req, res) => {
+  res.render("profiles", {
     layout: "main",
   });
 });
@@ -245,8 +245,6 @@ app.get("/thankyou", (req, res) => {
         let lastName = results.rows[0].last; */
         let signature = results.rows[0].signature;
         res.render("thankyou", {
-          firstName,
-          lastName,
           signature,
         });
       })
@@ -303,15 +301,20 @@ app.get("/signed", (req, res) => {
 });
 
 //route for the signersbycity page - GET req-to see who has signed the petition has the same city----------------------
-app.get("/city", (req, res) => {
-  console.log("This is my req.params.city: ", req.params.city);
+app.get("/signed/:city", (req, res) => {
+  console.log("This is my req.params: ", req.params);
 
   allSignersByCity(req.params.city)
     .then((results) => {
       console.log("This is my all signers check: ", results.rows);
+      console.log("This is my all signers check results: ", results);
+
       let people = results.rows;
-      res.render("city", {
+      let peopleWithSameCity = req.params.city;
+
+      res.render("signerswithcity", {
         people,
+        peopleWithSameCity,
       });
     })
     .catch((err) => {
@@ -319,9 +322,11 @@ app.get("/city", (req, res) => {
     });
 });
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log("my express server running!!!!");
-});
+if (require.main == module) {
+  app.listen(process.env.PORT || 8080, () => {
+    console.log("my express server running!!!!");
+  });
+}
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 ///////////////////petition part-3 reference learned in the class

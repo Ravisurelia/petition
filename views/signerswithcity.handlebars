@@ -1,0 +1,9 @@
+{{#if error}}
+<h2 class="error">Ups!! something went wrong! Please reload the page.</h2>
+{{/if}}
+<div class="city-container">
+    <h2 class="citylist">Signed members from `${{city}}`!</h2>
+    {{#people}}
+    <p> Name & age: {{first}} {{last}}, {{age}} </p>
+    {{/people}}
+</div>
