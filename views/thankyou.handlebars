@@ -1,9 +1,20 @@
 <div class="detailpage">
     <h2 class="thanks">Thank you for signing our petition</h2>
     <h3>click below to see who else has signed this petition.</h3>
+    <a href="./profile/edit"> <button>Edit your profile</button> </a>
+
     <div class="details">
         <h3>{{first}} {{last}}</h3>
         <img class="signbox" src="{{signature}}">
     </div>
+
+    <div class="deletesign">
+        <form method="post">
+            <button>Delete Signature</button>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        </form>
+    </div>
+
     <a class="people" href="./signed">Click Here</a>
+    <a href="./logout"><button>Log Out</button></a>
 </div>

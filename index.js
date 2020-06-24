@@ -16,6 +16,11 @@ const {
   signedId,
   getAllSigners,
   allSignersByCity,
+  deleteSignature,
+  editProfile,
+  profileWithPassword,
+  profileWithoutPassword,
+  upsertingProfiles,
 } = require("./data");
 const { hash, compare } = require("./bc.js");
 
@@ -51,24 +56,20 @@ app.use((req, res, next) => {
 });
 
 //routes----------------------------------------------------------------------------
-//route for the front page - GET req-----------------
+//route for the front page - GET req-----------------1
 app.get("/", (req, res) => {
   console.log("GET request to the root route");
   res.redirect("/register");
 });
 
-//route for the register page - GET req---------------------
+//route for the register page - GET req---------------------2
 app.get("/register", (req, res) => {
-  if (req.session.userId) {
-    res.redirect("petition");
-  } else {
-    res.render("register", {
-      layout: "main",
-    });
-  }
+  res.render("register", {
+    layout: "main",
+  });
 });
 
-//route for the front page - POST req for the register page-----------
+//route for the front page - POST req for the register page-----------3
 app.post("/register", (req, res) => {
   console.log("this is my req.body: ", req.body);
   console.log("this is my req.body.password: ", req.body.password);
@@ -88,7 +89,11 @@ app.post("/register", (req, res) => {
           req.session.userId = results.rows[0].id;
           req.session.permission = true;
           console.log("req.session after the value set: ", req.session);
-          res.redirect("profiles");
+          if (req.session.userId) {
+            res.redirect("profiles");
+          } else {
+            res.render("register");
+          }
         })
         .catch((err) => {
           console.log("my post register error: ", err);
@@ -105,28 +110,24 @@ app.post("/register", (req, res) => {
   //res.end();
 });
 
-//route for the login page - GET req-----------------------
+//route for the login page - GET req-----------------------4
 app.get("/login", (req, res) => {
-  if (req.session.userId) {
-    res.redirect("petition");
-  } else {
-    res.render("login", {
-      layout: "main",
-    });
-  }
+  res.render("login", {
+    layout: "main",
+  });
 });
 
-//route for the login page - POST req------------------------------
+//route for the login page - POST req------------------------------5
 app.post("/login", (req, res) => {
   console.log("this is my req.body in post login: ", req.body);
-
+  console.log("this is my req.session in post login: ", req.session.userId);
   //here we are getting the password from the register page and matching it here to see if it is the same
   gettingPassword(req.body.email)
     .then((results) => {
       console.log("my login results: ", results);
       console.log("req.body.email in login : ", req.body.email);
       console.log("req.body.password in login: ", req.body.password);
-      compare(req.body.email, results.rows[0].password)
+      compare(req.body.password, results.rows[0].password)
         .then((match) => {
           if (match) {
             req.session.userId = results.rows[0].id;
@@ -167,33 +168,41 @@ app.post("/login", (req, res) => {
   //res.end();
 });
 
-//route for the profile page - GET req------------------------------
+//route for the profile page - GET req------------------------------6
 app.get("/profiles", (req, res) => {
   res.render("profiles", {
     layout: "main",
   });
 });
 
-//route for the profile page - POST req------------------------------
+//route for the profile page - POST req------------------------------7
 app.post("/profiles", (req, res) => {
-  if (req.session.userId) {
-    userProfileData(
-      req.body.age,
-      req.body.city,
-      req.body.url,
-      req.session.userId
-    )
-      .then((results) => {
-        console.log("This is my post profiles results: ", results);
-        res.redirect("petition");
-      })
-      .catch((err) => {
-        console.log("This is my post catch err: ", err);
+  console.log("getting req.body in profiles: ", req.body);
+  console.log("req.body.url before: ", req.body.url);
+
+  /*  if (
+    !req.body.url.startsWith("https://") &&
+    !req.body.url.startsWith("http://")
+  ) {
+    req.body.url = `https://${req.body.url}`;
+  } */
+
+  console.log("req.body.url after: ", req.body.url);
+
+  userProfileData(req.body.age, req.body.city, req.body.url, req.session.userId)
+    .then((results) => {
+      console.log("This is my post profiles results: ", results);
+      res.redirect("petition");
+    })
+    .catch((err) => {
+      console.log("This is my post catch err: ", err);
+      res.render("profile", {
+        error: true,
       });
-  }
+    });
 });
 
-//route for the petition page - GET req------------------------------
+//route for the petition page - GET req------------------------------8
 app.get("/petition", (req, res) => {
   //here we are taking the user to sign the petition with the their signature after password and ids are matched
   if (req.session.userId) {
@@ -215,7 +224,7 @@ app.get("/petition", (req, res) => {
   }
 });
 
-//route for the petition page - POST req------------------------------
+//route for the petition page - POST req------------------------------9
 app.post("/petition", (req, res) => {
   console.log("this is my signature thing: ", req.body);
 
@@ -235,7 +244,7 @@ app.post("/petition", (req, res) => {
     });
 });
 
-//route for the thanks page - GET req------------------------------
+//route for the thanks page - GET req------------------------------10
 app.get("/thankyou", (req, res) => {
   if (req.session.userId) {
     signedUserId(req.session.userId)
@@ -256,7 +265,125 @@ app.get("/thankyou", (req, res) => {
   }
 });
 
-//route for the signed page - GET req-to see who has signed the petition----------------------
+//route for the thankyou page - post req-to delete the sign----------------------11
+app.post("/thankyou", (req, res) => {
+  deleteSignature(req.session.userId).then((results) => {
+    res.redirect("/petition");
+  });
+});
+
+//route for the /profile/edit - GET req------------------------------12
+app.get("/profile/edit", (req, res) => {
+  if (req.session.userId) {
+    editProfile(req.session.userId)
+      .then((results) => {
+        console.log("my /profile/edit results: ", results);
+
+        let people = results.rows;
+        res.render("editprofile", {
+          people,
+        });
+      })
+      .catch((err) => {
+        console.log("my /profile/edit error: ", err);
+      });
+  } else {
+    console.log("this is my log in get /profile/edit");
+  }
+});
+
+//route for the /profile/edit - post req------------------------------13
+app.post("/profile/edit", (req, res) => {
+  if (req.session.userId) {
+    if (req.body.password == "") {
+      profileWithoutPassword(
+        req.session.userId,
+        req.body.firstname,
+        req.body.lastname,
+        req.body.email
+      )
+        .then((results) => {
+          /* if (
+            !req.body.url.startsWith("https://") &&
+            !req.body.url.startsWith("http://")
+          ) {
+            req.body.url = `https://${req.body.url}`;
+          } */
+
+          upsertingProfiles(
+            req.session.userId,
+            req.body.age,
+            req.body.city,
+            req.body.url
+          )
+            .then((results) => {
+              console.log(
+                "upsertingprofiles profilewithoutpassword results--1: ",
+                results
+              );
+              res.redirect("/thankyou");
+            })
+            .catch((err) => {
+              console.log(
+                "my post upsertingprofiles /profile/edit error 1: ",
+                err
+              );
+            });
+        })
+        .catch((err) => {
+          console.log("my post upsertingprofiles /profile/edit error 2: ", err);
+        });
+    } else {
+      hash(req.body.password).then((hashedpassword) => {
+        profileWithPassword(
+          req.session.userId,
+          req.body.firstname,
+          req.body.lastname,
+          req.body.email,
+          hashedpassword
+        )
+          .then((results) => {
+            if (
+              !req.body.url.startsWith("https://") &&
+              !req.body.url.startsWith("http://")
+            ) {
+              req.body.url = `https://${req.body.url}`;
+            }
+
+            upsertingProfiles(
+              req.session.userId,
+              req.body.age,
+              req.body.city,
+              req.body.url
+            )
+              .then((results) => {
+                console.log(
+                  "upsertingprofiles profilewithoutpassword results--2: ",
+                  results
+                );
+                res.redirect("/thankyou");
+              })
+              .catch((err) => {
+                console.log(
+                  "my post upsertingprofiles /profile/edit error 3: ",
+                  err
+                );
+              });
+          })
+          .catch((err) => {
+            console.log(
+              "my post upsertingprofiles /profile/edit error 4: ",
+              err
+            );
+          });
+      });
+    }
+  } else {
+    res.render("editprofile");
+  }
+});
+
+//route for the signed page - GET req-to see who has signed the petition----------------------14
 app.get("/signed", (req, res) => {
   if (req.session.userId) {
     signedUserId(req.session.userId).then((results) => {
@@ -300,7 +427,7 @@ app.get("/signed", (req, res) => {
   }
 });
 
-//route for the signersbycity page - GET req-to see who has signed the petition has the same city----------------------
+//route for the signersbycity page - GET req-to see who has signed the petition has the same city----------------------15
 app.get("/signed/:city", (req, res) => {
   console.log("This is my req.params: ", req.params);
 
@@ -320,6 +447,12 @@ app.get("/signed/:city", (req, res) => {
     .catch((err) => {
       console.log("my /signed error in getting all signers with city : ", err);
     });
+});
+
+//route for the logout page---------------------------------------------------------16
+app.get("/logout", (req, res) => {
+  req.session.userId = null;
+  res.redirect("/register");
 });
 
 if (require.main == module) {

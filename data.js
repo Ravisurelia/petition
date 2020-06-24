@@ -85,6 +85,51 @@ exports.allSignersByCity = (city) => {
   );
 };
 
+exports.deleteSignature = (id) => {
+  return db.query(`DELETE FROM signatures WHERE user_id = $1`, [id]);
+};
+
+exports.editProfile = (id) => {
+  return db.query(
+    `SELECT users.id, users.first, users.last, users.email, user_profiles.age, user_profiles.city, user_profiles.url
+  FROM users
+  RIGHT JOIN user_profiles
+  ON users.id = user_profiles.user_id
+  WHERE users.id = $1`,
+    [id]
+  );
+};
+
+exports.profileWithPassword = (id, firstname, lastname, email, password) => {
+  return db.query(
+    `
+  UPDATE users
+  SET first = $2, last = $3, email = $4, password = $5
+  WHERE users.id = $1 RETURNING *`,
+    [id, firstname, lastname, email, password]
+  );
+};
+
+exports.profileWithoutPassword = (id, firstname, lastname, email) => {
+  return db.query(
+    `
+  UPDATE users
+  SET first = $2, last = $3, email = $4
+  WHERE users.id = $1 RETURNING *`,
+    [id, firstname, lastname, email]
+  );
+};
+
+exports.upsertingProfiles = (id, age, city, url) => {
+  return db.query(
+    `INSERT INTO user_profiles (age , city, url, user_id)
+  VALUES ($2, $3, $4, $1)
+  ON CONFLICT (user_id)
+  DO UPDATE SET user_id = $1, age = $2, city = $3, url = $4 RETURNING * `,
+    [id, age, city, url]
+  );
+};
+
 /* db.query("SELECT * FROM cities")
   .then((results) => {
     console.log(results);

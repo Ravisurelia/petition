@@ -1,0 +1,24 @@
+<div class="editprofile">
+
+    {{#if error}}
+    <h2 class="editerror">Something went wrong!! Please reload the page and re-enter the changes you want to see!</h2>
+    {{/if}}
+
+    <div class="profileeditcontainer">
+        <p>Edit your profile! Here you can insert your new details!</p>
+    </div>
+
+    <form method="POST">
+        {{#people}}
+        <input type="text" class="userinput" name="firstname" placeholder="First Name">
+        <input type="text" class="userinput" name="lastname" placeholder="Last Name">
+        <input type="text" class="email" name="email" placeholder="email">
+        <input type="password" class="password" name="password" placeholder="password">
+        <input type="number" class="age" name="age" placeholder="age">
+        <input type="text" class="city" name="city" placeholder="city">
+        <input type="text" class="url" name="url" placeholder="url">
+        <button>Update</button>
+        {{/people}}
+        <input type="hidden" name='_csrf' value="{{csrfToken}}">
+    </form>
+</div>
