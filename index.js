@@ -122,6 +122,7 @@ app.post("/login", (req, res) => {
     .then((results) => {
       console.log("my login results: ", results);
       console.log("req.body.email in login : ", req.body.email);
+      console.log("this is my 0 pass: ", results.rows[0].password);
       console.log("req.body.password in login: ", req.body.password);
       compare(req.body.password, results.rows[0].password)
         .then((match) => {
@@ -130,7 +131,7 @@ app.post("/login", (req, res) => {
             signedUserId(req.session.userId)
               .then((results) => {
                 console.log("my login results 2: ", results);
-                if (results.rowCount == 0) {
+                if (!results.rows[0]) {
                   res.redirect("petition");
                 } else {
                   res.redirect("thankyou");
@@ -242,12 +243,11 @@ app.post("/petition", (req, res) => {
 
 //route for the thanks page - GET req------------------------------10
 app.get("/thankyou", (req, res) => {
+  console.log("this is my user id in thankyou: ", req.session.userId);
   if (req.session.userId) {
     signedUserId(req.session.userId)
       .then((results) => {
         console.log("this is my thankyou results: ", results);
-        /*  let firstName = results.rows[0].first;
-        let lastName = results.rows[0].last; */
         let signature = results.rows[0].signature;
         res.render("thankyou", {
           signature,
@@ -277,6 +277,7 @@ app.get("/profile/edit", (req, res) => {
 
         let people = results.rows;
         res.render("editprofile", {
+          layout: "main",
           people,
         });
       })
@@ -436,6 +437,7 @@ app.get("/signed/:city", (req, res) => {
       let peopleWithSameCity = req.params.city;
 
       res.render("signerswithcity", {
+        layout: "main",
         people,
         peopleWithSameCity,
       });

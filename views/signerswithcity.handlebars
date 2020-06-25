@@ -5,10 +5,10 @@
 
     <div class="city-container">
 
-        <h2 class="citylist">Signed members from the same {{city}}!</h2>
+        <h2 class="citylist">Signed members from the same city!</h2>
 
         {{#people}}
-        <p> Name & age: {{first}} {{last}}, {{age}} </p>
+        <li class="samecity">{{first}} {{last}}, {{age}}</li>
         {{/people}}
 
         <a href="./logout"><button>Log Out</button></a>
