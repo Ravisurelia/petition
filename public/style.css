@@ -1,5 +1,10 @@
 body {
-  background-color: wheat;
+  background: linear-gradient(
+    90deg,
+    rgba(131, 58, 180, 1) 0%,
+    rgba(253, 29, 29, 0.8435749299719888) 50%,
+    rgba(252, 176, 69, 1) 100%
+  );
   height: 100vh;
   margin: 0px;
 }
@@ -8,19 +13,17 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-.container {
   text-align: center;
 }
 
 .theme {
-  font-family: "Courier New", Courier, monospace;
-  font-weight: 700;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
   font-size: 32px;
 }
 
 .info {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   font-size: 28px;
   text-align: center;
@@ -28,15 +31,16 @@ main {
 
 .vid {
   align-items: center;
-  margin-left: 325px;
 }
+
 form {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px;
   padding: 10px;
+  text-align: center;
 }
 
 input {
@@ -44,7 +48,7 @@ input {
   width: 200px;
   color: black;
   font-weight: bold;
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 canvas {
@@ -55,19 +59,25 @@ canvas {
 
 button {
   margin-top: 10px;
-  color: white;
-  width: 100px;
-  height: 25px;
-  font-family: "Courier New", Courier, monospace;
-  font-weight: bold;
-  background-color: black;
+  color: black;
+  width: 200px;
+  height: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  background: linear-gradient(
+    90deg,
+    rgba(131, 58, 180, 1) 0%,
+    rgba(253, 29, 29, 1) 50%,
+    rgba(252, 176, 69, 1) 100%
+  );
+  border: black solid 2px;
 }
 
 footer {
   height: 30px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
-  color: chocolate;
+  color: rgb(2, 0, 36);
   margin-bottom: 5px;
   text-align: center;
   position: fixed;
@@ -76,21 +86,20 @@ footer {
 }
 
 h3 {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   color: darkblue;
   text-align: center;
 }
 
 .people {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-decoration: underline;
   text-align: center;
-  margin-left: 45%;
 }
 
 .thanks {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-align: center;
 }
@@ -105,7 +114,7 @@ h3 {
 
 h4 {
   font-size: 20px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
   font-style: italic;
 }
@@ -119,6 +128,8 @@ h4 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
 }
 
 .registration {
@@ -129,13 +140,113 @@ h4 {
 }
 
 .smallintro {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
-  font-size: 25px;
+  font-size: 35px;
   text-align: center;
 }
 
 .loginpage {
   text-align: center;
   margin-top: 20px;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  font-weight: bold;
+}
+
+.loginpage:hover {
+  text-align: center;
+  margin-top: 25px;
+  text-decoration: underline;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+
+.loginerror {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+}
+
+#regipara {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+}
+
+.logincontainer {
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 20px;
+  font-weight: 700;
+  font-size: 35px;
+  text-align: center;
+}
+
+.signup {
+  text-align: center;
+  margin-top: 20px;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup:hover {
+  text-align: center;
+  margin-top: 25px;
+  text-decoration: underline;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mylinks {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.editprofile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.list {
+  text-decoration: none;
+  word-spacing: 2px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  padding-bottom: 5px;
+  font-weight: bold;
+}
+
+.signerswithcity {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.city-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,19 +1,20 @@
 <div class="registration">
     {{#if error}}
-    <h2 class="loginerror">Something went wrong!! Please check if you have filled all the required areas!.</h2>
+    <h2 class="loginerror">Something went wrong!! Please check if you have filled all the required areas!!!!</h2>
     {{/if}}
     <div class="logincontainer">
         <div class="smallintro">
             <p>Sign this petition to legally laugh like a Denver (Money heist)! </p>
-            <p>Your support is all we have!</p>
+            <p>Please watch the video before you register. #laughandlive</p>
             <div class="vid">
                 <iframe width="560" height="300" src="https://www.youtube.com/embed/MASPbl210_c" frameborder="0"
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>Denver's
                     laugh</iframe>
             </div>
-            <p>Please insert your details here!</p>
+
         </div>
+        <p id="regipara">Please insert your details here!</p>
         <form method="POST">
             <input type="text" class="userinput" name="firstname" placeholder="First Name">
             <input type="text" class="userinput" name="lastname" placeholder="Last Name">

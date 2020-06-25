@@ -1,9 +1,10 @@
 <div class="signed-container">
 
-    <h2 class="list">WE ARE ONE!</h2>
+    <h2>WE ARE ONE!</h2>
 
     {{#people}}
-    <li><a href="{{url}}">{{first}} {{last}}, </a> {{age}} <a href="/signed/{{city}}"> {{city}} </a></li>
+    <li class="list"><a class="list" href="{{url}}">{{first}} {{last}}, </a> {{age}}, <a class="list"
+            href="/signed/{{city}}"> {{city}} </a></li>
     {{/people}}
 
     <a href="./logout"><button>Log Out</button></a>

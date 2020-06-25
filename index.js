@@ -89,11 +89,7 @@ app.post("/register", (req, res) => {
           req.session.userId = results.rows[0].id;
           req.session.permission = true;
           console.log("req.session after the value set: ", req.session);
-          if (req.session.userId) {
-            res.redirect("profiles");
-          } else {
-            res.render("register");
-          }
+          res.redirect("profiles");
         })
         .catch((err) => {
           console.log("my post register error: ", err);

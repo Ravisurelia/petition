@@ -3,9 +3,9 @@
     <h2 class="error">All fields are mandatory.</h2>
     {{/if}}
 
-    <div class="conatiner">
-        <h1 class="theme">Sign this petition to legally laugh like a Denver (Money heist)! </h1>
-        <h2 class="info">Please watch the video before you sign up!! It will make you laugh.</h2>
+    <div class="petitionconatiner">
+        <h1 class="theme">Just need your signature and we are good to go! </h1>
+        <h2 class="info">if you haven't watch the video then watch now!! It will make you laugh.</h2>
         <div class="vid">
             <iframe width="560" height="300" src="https://www.youtube.com/embed/MASPbl210_c" frameborder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>Denver's
@@ -14,7 +14,7 @@
         <form method="POST">
             <input id="sign" type="hidden" name='signature'>
             <input type="hidden" name='_csrf' value="{{csrfToken}}">
-            <canvas height="80px" width="600px"></canvas>
+            <canvas height="150px" width="600px"></canvas>
             <button>Submit</button>
         </form>
 

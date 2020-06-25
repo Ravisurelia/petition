@@ -1,4 +1,5 @@
 <div class="login">
+
     {{#if error}}
     <h2 class="loginerror">Something went wrong!! Please check your email and password.</h2>
     <h2 class="loginerror">Make sure that you have registered yourself!</h2>
@@ -12,8 +13,6 @@
             <input type="hidden" name='_csrf' value="{{csrfToken}}">
             <button>Submit</button>
         </form>
-        <a class="signup" href="./register">If you haven't registered yet? Register Here!</a>
     </div>
-
-
+    <a class="signup" href="./register">If you haven't registered yet? Register Here!</a>
 </div>

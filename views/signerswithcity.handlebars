@@ -1,15 +1,17 @@
-{{#if error}}
-<h2 class="error">Ups!! something went wrong! Please reload the page.</h2>
-{{/if}}
+<main class="signerswithcity">
+    {{#if error}}
+    <h2 class="error">Ups!! something went wrong! Please reload the page.</h2>
+    {{/if}}
 
-<div class="city-container">
+    <div class="city-container">
 
-    <h2 class="citylist">Signed members from {{city}}!</h2>
+        <h2 class="citylist">Signed members from the same {{city}}!</h2>
 
-    {{#people}}
-    <p> Name & age: {{first}} {{last}}, {{age}} </p>
-    {{/people}}
+        {{#people}}
+        <p> Name & age: {{first}} {{last}}, {{age}} </p>
+        {{/people}}
 
-    <a href="./logout"><button>Log Out</button></a>
+        <a href="./logout"><button>Log Out</button></a>
 
-</div>
+    </div>
+</main>
