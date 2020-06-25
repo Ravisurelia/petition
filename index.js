@@ -132,9 +132,9 @@ app.post("/login", (req, res) => {
               .then((results) => {
                 console.log("my login results 2: ", results);
                 if (!results.rows[0]) {
-                  res.redirect("petition");
+                  res.redirect("/petition");
                 } else {
-                  res.redirect("thankyou");
+                  res.redirect("/thankyou");
                 }
               })
               .catch((err) => {
@@ -257,7 +257,7 @@ app.get("/thankyou", (req, res) => {
         console.log("my /thankyou error: ", err);
       });
   } else {
-    res.redirect("register");
+    res.redirect("/register");
   }
 });
 

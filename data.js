@@ -21,7 +21,7 @@ exports.addUser = (firstname, lastname, email, password) => {
 //user-table----------------------------------------------
 exports.gettingPassword = (email) => {
   //password and id to email
-  return db.query("SELECT password FROM users WHERE email = $1", [email]);
+  return db.query("SELECT password, id FROM users WHERE email = $1", [email]);
 };
 
 //INSERTING DATA INTO user_profiles----------------------------------------------

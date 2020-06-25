@@ -10,13 +10,13 @@
 
     <form method="POST">
         {{#people}}
-        <input type="text" class="userinput" name="firstname" placeholder="First Name">
-        <input type="text" class="userinput" name="lastname" placeholder="Last Name">
-        <input type="text" class="email" name="email" placeholder="email">
-        <input type="password" class="password" name="password" placeholder="password">
-        <input type="number" class="age" name="age" placeholder="age">
-        <input type="text" class="city" name="city" placeholder="city">
-        <input type="text" class="url" name="url" placeholder="url">
+        <input type="text" class="userinput" name="firstname" placeholder="First Name" value="{{first}}">
+        <input type="text" class="userinput" name="lastname" placeholder="Last Name" value="{{last}}">
+        <input type="text" class="email" name="email" placeholder="email" value="{{email}}">
+        <input type="password" class="password" name="password" placeholder="password" value="{{password}}">
+        <input type="number" class="age" name="age" placeholder="age" value="{{age}}">
+        <input type="text" class="city" name="city" placeholder="city" value="{{city}}">
+        <input type="text" class="url" name="url" placeholder="url" value="{{url}}">
         <button>Update</button>
         {{/people}}
         <input type="hidden" name='_csrf' value="{{csrfToken}}">
